@@ -1,4 +1,4 @@
-# Khofo #
+# README #
 <p align="center">
 	<h1>Khofo</h1>
   	<a target="_blank" href="https://packagist.org/packages/khofaai/khofo"><img src="https://img.shields.io/badge/khofo-dev(beta)-orange.svg" alt="Build Status"></a>
@@ -6,7 +6,7 @@
   	<a target="_blank" href="https://packagist.org/packages/khofaai/khofo"><img src="https://img.shields.io/badge/licence-mit-green.svg" alt="Coverage Status"></a>
   	<br>
 </p>
-this package is for [Laravel framework](https://laravel.com)
+this package is for <a target="_blank" href="https://laravel.com">Laravel framework</a>
 
 you can install by using :
 
@@ -15,28 +15,18 @@ you can install by using :
 ### What is this repository for? ###
 
 * help you to organize you project directory architecture
-* 0.1.3
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* 0.1.3 ( beta )
 
 ### How do I get set up? ###
 
 * no configuration needed
-* need vuejs installed
-* no database configuration
-* no test sets
+* need nodejs installed
 * add to config/app.php :
 
         Khofo\KhofoServiceProvider::class,
         Khofo\vendor\Providers\RouteServiceProvider::class,
         ...
 
-### Contribution guidelines ###
+### Status ###
 
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+still in developement ! thanks =)
