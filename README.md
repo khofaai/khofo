@@ -1,6 +1,12 @@
-# README #
-
-this package is for [Laravel framework](laravel.com)
+# Khofo #
+<p align="center">
+	<h1>Khofo</h1>
+  	<a target="_blank" href="https://packagist.org/packages/khofaai/khofo"><img src="https://img.shields.io/badge/khofo-dev(beta)-orange.svg" alt="Build Status"></a>
+  	<a target="_blank" href="https://packagist.org/packages/khofaai/khofo"><img src="https://img.shields.io/badge/composer-v0.1.3-orange.svg" alt="Coverage Status"></a>
+  	<a target="_blank" href="https://packagist.org/packages/khofaai/khofo"><img src="https://img.shields.io/badge/licence-mit-green.svg" alt="Coverage Status"></a>
+  	<br>
+</p>
+this package is for [Laravel framework](https://laravel.com)
 
 you can install by using :
 
