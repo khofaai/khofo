@@ -1,0 +1,28 @@
+{
+    "name": "khofaai/khofo",
+    "description": "module manager",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "khofaai",
+            "email": "anaselalamikh@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Khofo\\":"src/"
+        },
+        "files": [
+            "src/helpers/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Khofo\\KhofoServiceProvider",
+                "Khofo\\vendor\\Providers\\RouteServiceProvider"
+            ]
+        }
+    }
+}
