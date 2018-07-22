@@ -27,11 +27,7 @@ if (!function_exists(('khofo_asset'))) {
 if (!function_exists('module_exists')) {
 	function module_exists($module_name) {
 		$path = khofo_base('modules/'.$module_name);
-		$exists = file_exists($path);
-		if ($exists) {
-			return $path;
-		}
-		return false;
+		return file_exists($path)? $path : false;
 	}
 }
 
