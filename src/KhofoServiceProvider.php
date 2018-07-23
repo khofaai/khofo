@@ -3,8 +3,6 @@
 namespace Khofo;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Broadcast;
-
 use Khofo\vendor\Commands\KhofoCommand;
 use Khofo\vendor\Commands\KhofoInstall;
 use Khofo\vendor\Commands\KhofoDelete;
@@ -20,6 +18,7 @@ class KhofoServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
+     * Logic laravel
      *
      * @return void
      */
@@ -28,8 +27,13 @@ class KhofoServiceProvider extends ServiceProvider
         $this->loadCommands();
     }
 
-    public function loadCommands() {
-
+    /**
+     * Load all commands
+     *
+     * @return void
+     */
+    private function loadCommands()
+    {
         if ($this->app->runningInConsole()) {
             $this->commands([
                 KhofoInstall::class,

@@ -23,8 +23,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-
         parent::boot();
     }
 
@@ -33,11 +31,9 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function map()
-    {   
-
+    public function map() 
+    {
         $this->coreRoutes();
-        //
     }
 
     /**
@@ -50,8 +46,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function coreRoutes()
     {
         if (file_exists(khofo_base('routes.php'))) {
-
             Route::middleware('web')->group(khofo_base('routes.php'));
         }
     }
+
 }
