@@ -36,8 +36,7 @@ class KhofoMakeModel extends KhofoCommands
      *
      * @return mixed
      */
-    public function handle()
-    {
+    public function handle() {
         try {
             if (!$this->super_construct()) {
                 return false;
@@ -73,4 +72,5 @@ class KhofoMakeModel extends KhofoCommands
 
         return true;
     }
+
 }

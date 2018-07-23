@@ -23,8 +23,7 @@ class KhofoCores extends KhofoCommands
      *
      * @return mixed
      */
-    public function handle()
-    {
+    public function handle() {
         $modules = [];
         foreach (core_modules() as $key => $module) {
             $modules[] = [

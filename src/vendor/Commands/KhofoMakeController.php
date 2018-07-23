@@ -74,4 +74,5 @@ class KhofoMakeController extends KhofoCommands
 
         return true;
     }
+
 }

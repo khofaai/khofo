@@ -43,8 +43,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function coreRoutes()
-    {
+    protected function coreRoutes() {
         if (file_exists(khofo_base('routes.php'))) {
             Route::middleware('web')->group(khofo_base('routes.php'));
         }
