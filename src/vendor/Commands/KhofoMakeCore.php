@@ -4,12 +4,12 @@ namespace Khofo\vendor\Commands;
 
 class KhofoMakeCore extends KhofoCommands
 {
-	/**
-	 * The name and signature of the console command.
-	 *
-	 * @var string
-	 */
-	protected $signature = 'Khofo:make:core
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'Khofo:make:core
 	{name : module name} 
 	{--no-sync=default : to not synchronize global router with this components router}
 	{--tpl=default : to create own blade template for this module}
@@ -17,253 +17,248 @@ class KhofoMakeCore extends KhofoCommands
 	{--model=default : if model is need with creation set name for it} 
 	{--migrate=default : if migration is need with creation set name for it}';
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'creating core';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'creating core';
 
-	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	protected $_Uname;
-	protected $_model;
-	protected $_migrate;
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    protected $_Uname;
+    protected $_model;
+    protected $_migrate;
 
-	public function __construct() {
-		
-		parent::__construct();
-	}
+    private function self_construct() {
 
-	private function self_construct() {
+        $this->setCommandOption(['no-sync', 'tpl', 'with-admin', 'model', 'migrate']);
+    }
 
-		$this->setCommandOption(['no-sync','tpl','with-admin','model','migrate']);
-	}
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle() {
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
-	 */
-	public function handle() {
-		
-		try {
+        try {
 
-			if (!$this->super_construct()) {
-				return false;
-			}
-			$this->self_construct();
-			
-			if (file_exists($this->module_path)) {
-				
-				$this->comment("[".$this->_name.'] directory already exist !');
-				return false;
-			}
+            if (!$this->super_construct()) {
+                return false;
+            }
+            $this->self_construct();
 
-			$this->generateModule();
+            if (file_exists($this->module_path)) {
 
-			$this->info('<options=bold;fg=cyan>['.$this->_name.']<bg=black;fg=cyan> package created successfully');
-		} catch (Exception $e) {
+                $this->comment("[" . $this->_name . '] directory already exist !');
+                return false;
+            }
 
-			$this->error('somthing went wrong !');
-		}
-	}
+            $this->generateModule();
 
-	private function generateModule() {
+            $this->info('<options=bold;fg=cyan>[' . $this->_name . ']<bg=black;fg=cyan> package created successfully');
+        } catch (Exception $e) {
 
-		$this->updateModules();
-		$this->generateDirectories();
-		$this->generateFiles();
+            $this->error('somthing went wrong !');
+        }
+    }
 
-		$this->updateWebpackMix();
-	}
+    private function generateModule() {
 
-	private function generateDirectories() {
+        $this->updateModules();
+        $this->generateDirectories();
+        $this->generateFiles();
 
-		$this->makeDirectory();
-		$this->makeDirectory('build');
-		$this->makeDirectory('Components');
-		$this->makeDirectory('Components/app');
-	
-		if ($this->_options['with-admin']) {
-			$this->makeDirectory('Components/admin');
-		}
+        $this->updateWebpackMix();
+    }
 
-		$this->makeDirectory('Controllers');
-		$this->makeDirectory('Database');
-		$this->makeDirectory('Database/Models');
-		$this->makeDirectory('Database/Migrations');
-	}
+    private function generateDirectories() {
 
-	private function generateFiles() {
+        $this->makeDirectory();
+        $this->makeDirectory('build');
+        $this->makeDirectory('Components');
+        $this->makeDirectory('Components/app');
 
-		$this->makeJsFile('app');
-		$this->makeJsFile('route');
-		$this->makeVueFile();
-		$this->makeControllerFile();
-		$this->makeRouteFile();
+        if ($this->_options['with-admin']) {
+            $this->makeDirectory('Components/admin');
+        }
 
-		if ($this->_options['tpl'] && !file_exists(resource_path('views/'.$this->_options['tpl'].'.blade.php'))) {
-			$this->makeFile(resource_path('views/'.$this->_options['tpl'].'.blade.php'),$this->CoreTemplateContent());
-		}
-	}
-   
-	public function checkStrPos($el,$str) {
-	
-		return $el != '' && strpos($el,$str) !== false;
-	}
+        $this->makeDirectory('Controllers');
+        $this->makeDirectory('Database');
+        $this->makeDirectory('Database/Models');
+        $this->makeDirectory('Database/Migrations');
+    }
 
-	public function updateWebpackMix() {
-	   
-		$path = $this->base_path.'webpack.mix.js';
-		$js = file($path);
+    private function generateFiles() {
 
-		foreach ($js as $key => $elem) {
-			$el = trim(str_replace(' ', '', $elem));
+        $this->makeJsFile('app');
+        $this->makeJsFile('route');
+        $this->makeVueFile();
+        $this->makeControllerFile();
+        $this->makeRouteFile();
 
-			if ($this->checkStrPos($el,'module.exports=[')){
-				$enable = $this->moduleEnabled();
-				$modl_line = "\t{src:'modules/".$this->_name."/app.js',build:'modules/".$this->_name."/build',enable:".$enable."},\n";
-				array_splice( $js, $key+1, 0, $modl_line );
-			}
-		}
+        if ($this->_options['tpl'] && !file_exists(resource_path('views/' . $this->_options['tpl'] . '.blade.php'))) {
+            $this->makeFile(resource_path('views/' . $this->_options['tpl'] . '.blade.php'), $this->coreTemplateContent());
+        }
+    }
 
-		file_put_contents($path, $js);
-	}
+    public function checkStrPos($el, $str) {
 
-	public function moduleEnabled() {
+        return $el != '' && strpos($el, $str) !== false;
+    }
 
-		return is_null($this->_options['no-sync']) ? 'true' : ( !$this->_options['no-sync'] ? 'false' : 'true' );
-	}
+    public function updateWebpackMix() {
 
-	public function updateModules() {
+        $path = $this->base_path . 'webpack.mix.js';
+        $js = file($path);
 
-		$path = khofo_base('core.json');
+        foreach ($js as $key => $elem) {
+            $el = trim(str_replace(' ', '', $elem));
 
-		$modules = json_decode(file_get_contents($path),true);
+            if ($this->checkStrPos($el, 'module.exports=[')) {
+                $enable = $this->moduleEnabled();
+                $modl_line = "\t{src:'modules/" . $this->_name . "/app.js',build:'modules/" . $this->_name . "/build',enable:" . $enable . "},\n";
+                array_splice($js, $key + 1, 0, $modl_line);
+            }
+        }
 
-		$modules['modules'][$this->_name] = [
-			'installed' => true,
-			'enabled' => $this->moduleEnabled() == "true" ? true : false,
-			'created_at' => date('Y-m-d H:i:s')
-		];
+        file_put_contents($path, $js);
+    }
 
-		file_put_contents($path, json_encode((Object)$modules, JSON_PRETTY_PRINT));
-	}
+    public function moduleEnabled() {
 
-	public function makeModuleFile($target,$fileName = '',$ext = 'js') {
-		
-		$filename = ($fileName == '' ? $target : $fileName);
-		
-		$path = $this->module_path.'/'.$filename.'.'.$ext;
-		$content = $this->{$target.'Content'}();
-		
-		$this->makeFile($path,$content);
-	}
+        return is_null($this->_options['no-sync']) ? 'true' : (!$this->_options['no-sync'] ? 'false' : 'true' );
+    }
 
-	public function makeJsFile($target,$fileName = '') {
-		
-		$this->makeModuleFile($target,$fileName);
-	}
+    public function updateModules() {
 
-	public function makeVueFile() {
-		
-		$this->makeModuleFile('Components','Components/app/'.$this->_name,'vue');
-		
-		if ($this->_options['with-admin']) {
-			$this->makeModuleFile('Components','Components/admin/admin_'.$this->_name,'vue');
-		}
-	}
+        $path = khofo_base('core.json');
 
-	public function makeControllerFile() {
-		
-		$this->makeModuleFile('Controllers','Controllers/'.$this->_Uname.'Controller','php');
-	}
+        $modules = json_decode(file_get_contents($path), true);
 
-	public function makeRouteFile() {
-		
-		$this->makeFile($this->module_path.'/routes.php',$this->phpRouteContent());
-	}
+        $modules['modules'][$this->_name] = [
+            'installed' => true,
+            'enabled' => $this->moduleEnabled() == "true" ? true : false,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
 
-	public function appContent() {
-		
-		return  "import router from '../../routes';\n"
-				."\nrequire('../../core');\n"
-				."/**\n"
-				."* Next, we will create a fresh Vue application instance and attach it to\n"
-				."* the page. Then, you may begin adding components to this application\n"
-				."* or customize the JavaScript scaffolding to fit your unique needs.\n"
-				."*/\n\n"
-				."Vue.component('".$this->_name."', require('./Components/app/".$this->_name.".vue'));\n\n"
-				."const app = new Vue({\n"
-				."	el: '#".$this->_name."',\n"
-				."	router\n"
-				."});\n";
-	}
+        file_put_contents($path, json_encode((Object) $modules, JSON_PRETTY_PRINT));
+    }
 
-	public function routeContent() {
-		$content =  "import ".$this->_Uname." from './Components/app/".$this->_name."';\n";
+    public function makeModuleFile($target, $fileName = '', $ext = 'js') {
 
-		if ($this->_options['with-admin']) {
-			$content .= "import Admin".$this->_Uname." from './Components/app/".$this->_name."';\n";
-		}
+        $filename = ($fileName == '' ? $target : $fileName);
 
-		$content .= "export default [\n"
-					."	{\n"
-					."		path:'/".strtolower($this->_name)."',\n"
-					."		component:".$this->_Uname."\n"
-					."	},\n";
+        $path = $this->module_path . '/' . $filename . '.' . $ext;
+        $content = $this->{$target . 'Content'}();
 
-		if ($this->_options['with-admin']) {
-			$content .=		"	{\n"
-							."		path:'/admin/".$this->_name."',\n"
-							."		component: Admin".$this->_Uname."\n"
-							."	}\n";
-		}
-		$content .= "];\n";
+        $this->makeFile($path, $content);
+    }
 
-		return $content;
-	}
+    public function makeJsFile($target, $fileName = '') {
 
-	public function ComponentsContent() {
+        $this->makeModuleFile($target, $fileName);
+    }
 
-		return  "<template>\n"
-				."    <div class='container'>\n"
-				."        <div class='row'>\n"
-				."            <div class='col-md-8 col-md-offset-2'>\n"
-				."                <div class='panel panel-default'>\n"
-				."                    <div class='panel-heading'>".$this->_name." Component</div>\n\n"
-				."                    <div class='panel-body'>\n"
-				."                        I'm an ".$this->_name." component!\n"
-				."                    </div>\n"
-				."                </div>\n"
-				."            </div>\n"
-				."        </div>\n"
-				."    </div>\n"
-				."</template>\n"
+    public function makeVueFile() {
 
-				."<script>\n"
-				."    export default {\n"
-				."        mounted() {\n"
-				."            console.log('Component mounted.')\n"
-				."        }\n"
-				."    }\n"
-				."</script>";
-	}
+        $this->makeModuleFile('Components', 'Components/app/' . $this->_name, 'vue');
 
-	public function ControllersContent() {
-		
-		return  $this->generateController($this->_Uname);
-	}
+        if ($this->_options['with-admin']) {
+            $this->makeModuleFile('Components', 'Components/admin/admin_' . $this->_name, 'vue');
+        }
+    }
 
-	public function phpRouteContent() {
-		return  "<?php\n\n"
-				."Route::get('".strtolower($this->_name)."',function() {\n"
-				."\tdd('".$this->_name." component routes');\n"
-				."});\n"
-				."// set your routes here";
-	}
+    public function makeControllerFile() {
+
+        $this->makeModuleFile('Controllers', 'Controllers/' . $this->_Uname . 'Controller', 'php');
+    }
+
+    public function makeRouteFile() {
+
+        $this->makeFile($this->module_path . '/routes.php', $this->phpRouteContent());
+    }
+
+    public function appContent() {
+
+        return "import router from '../../routes';\n"
+                . "\nrequire('../../core');\n"
+                . "/**\n"
+                . "* Next, we will create a fresh Vue application instance and attach it to\n"
+                . "* the page. Then, you may begin adding components to this application\n"
+                . "* or customize the JavaScript scaffolding to fit your unique needs.\n"
+                . "*/\n\n"
+                . "Vue.component('" . $this->_name . "', require('./Components/app/" . $this->_name . ".vue'));\n\n"
+                . "const app = new Vue({\n"
+                . "	el: '#" . $this->_name . "',\n"
+                . "	router\n"
+                . "});\n";
+    }
+
+    public function routeContent() {
+        $content = "import " . $this->_Uname . " from './Components/app/" . $this->_name . "';\n";
+
+        if ($this->_options['with-admin']) {
+            $content .= "import Admin" . $this->_Uname . " from './Components/app/" . $this->_name . "';\n";
+        }
+
+        $content .= "export default [\n"
+                . "	{\n"
+                . "		path:'/" . strtolower($this->_name) . "',\n"
+                . "		component:" . $this->_Uname . "\n"
+                . "	},\n";
+
+        if ($this->_options['with-admin']) {
+            $content .= "	{\n"
+                    . "		path:'/admin/" . $this->_name . "',\n"
+                    . "		component: Admin" . $this->_Uname . "\n"
+                    . "	}\n";
+        }
+        $content .= "];\n";
+
+        return $content;
+    }
+
+    public function ComponentsContent() {
+
+        return "<template>\n"
+                . "    <div class='container'>\n"
+                . "        <div class='row'>\n"
+                . "            <div class='col-md-8 col-md-offset-2'>\n"
+                . "                <div class='panel panel-default'>\n"
+                . "                    <div class='panel-heading'>" . $this->_name . " Component</div>\n\n"
+                . "                    <div class='panel-body'>\n"
+                . "                        I'm an " . $this->_name . " component!\n"
+                . "                    </div>\n"
+                . "                </div>\n"
+                . "            </div>\n"
+                . "        </div>\n"
+                . "    </div>\n"
+                . "</template>\n"
+                . "<script>\n"
+                . "    export default {\n"
+                . "        mounted() {\n"
+                . "            console.log('Component mounted.')\n"
+                . "        }\n"
+                . "    }\n"
+                . "</script>";
+    }
+
+    public function ControllersContent() {
+
+        return $this->generateController($this->_Uname);
+    }
+
+    public function phpRouteContent() {
+        return "<?php\n\n"
+                . "Route::get('" . strtolower($this->_name) . "',function() {\n"
+                . "\tdd('" . $this->_name . " component routes');\n"
+                . "});\n"
+                . "// set your routes here";
+    }
+
 }

@@ -2,149 +2,142 @@
 
 namespace Khofo\vendor\Commands;
 
-class KhofoDelete extends KhofoCommands
-{
-	/**
-	 * The name and signature of the console command.
-	 *
-	 * @var string
-	 */
-	protected $signature = 'Khofo:delete';
+class KhofoDelete extends KhofoCommands {
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'delete module';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'Khofo:delete';
 
-	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	
-	protected $path;
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'delete module';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    protected $path;
     protected $module_name;
 
-	public function __construct() {
-		
-		parent::__construct();
-	}
+    public function self_construct() {
+        $modules = $this->modulesName();
+        if ($modules) {
 
-	public function self_construct() {
-		$modules = $this->modulesName();
-		if ($modules) {
+            $this->module_name = $this->choice('For Which Module ?', $this->modulesName());
+            return true;
+        } else {
+            $this->error('no module is created yet !');
+            return false;
+        }
+    }
 
-			$this->module_name = $this->choice('For Which Module ?',$this->modulesName());
-			return true;
-		} else {
-			$this->error('no module is created yet !');
-			return false;
-		}
-	}
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle() {
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
-	 */
-	public function handle() {
-		
-		if( $this->self_construct() ) {
+        if ($this->self_construct()) {
 
-			if (!$this->pathExist()) {
+            if (!$this->pathExist()) {
 
-				if ($this->confirm($this->module_name)) {
-					$this->extractModule();
-					$this->comment('<options=bold;fg=yellow>['.$this->module_name.'] package deleted successfully');
+                if ($this->confirm($this->module_name)) {
+                    $this->extractModule();
+                    $this->comment('<options=bold;fg=yellow>[' . $this->module_name . '] package deleted successfully');
 
-					$this->deleteDir($this->path);
-				}
-			} else {
-				
-				$this->error("[".$this->module_name."] module does't exist");
-			}
-		}
+                    $this->deleteDir($this->path);
+                }
+            } else {
 
+                $this->error("[" . $this->module_name . "] module does't exist");
+            }
+        }
+    }
 
-	}
+    private function pathExist() {
 
-	private function pathExist() {
+        $this->path = khofo_base('modules/' . $this->module_name);
 
-		$this->path = khofo_base('modules/'.$this->module_name);
+        return !is_dir($this->path);
+    }
 
-		return !is_dir($this->path);
-	}
+    private function extractModule() {
 
-	private function extractModule() {
+        $this->extractModuleFromWebpack(khofo_base('webpack.mix.js'));
+        $this->extractModuleFromCore();
+    }
 
-		$this->extractModuleFromWebpack(khofo_base('webpack.mix.js'));
-		$this->extractModuleFromCore();
-	}
-	
-	public function checkStrPos($el,$str) {
-		
-		return $el != '' && strpos($el,$str) !== false;
-	}
+    public function checkStrPos($el, $str) {
 
-	public function extractModuleFromWebpack($path) {
+        return $el != '' && strpos($el, $str) !== false;
+    }
 
-		$js = file($path);
-		foreach ($js as $key => $elem) {
-			
-			$el = $this->stripeElemet($elem);
+    public function extractModuleFromWebpack($path) {
 
-			if ($this->checkStrPos($el,'/'.$this->module_name.'/')){
-				
-				unset($js[$key]);
-			}
-		}
+        $js = file($path);
+        foreach ($js as $key => $elem) {
 
-		file_put_contents($path, $js);
-	}
+            $el = $this->stripeElemet($elem);
 
-	private function stripeElemet($element) {
-		
-		return trim(str_replace(' ', '', $element));
-	}
+            if ($this->checkStrPos($el, '/' . $this->module_name . '/')) {
 
-	public function extractModuleFromCore() {
-		
-		$path = khofo_base('core.json');
+                unset($js[$key]);
+            }
+        }
 
-		$modules = json_decode(file_get_contents($path),true);
+        file_put_contents($path, $js);
+    }
 
-		if (isset($modules['modules'][$this->module_name])) {
-			
-			unset($modules['modules'][$this->module_name]);
-		}
+    private function stripeElemet($element) {
 
-		file_put_contents($path, json_encode((Object)$modules, JSON_PRETTY_PRINT));
-	}
+        return trim(str_replace(' ', '', $element));
+    }
 
-	public function deleteDir($path) {
-	
-		if (!is_dir($path)) {
-			
-			throw new InvalidArgumentException("message");
-		}
-		
-		$path = str_finish($path,'/');
+    public function extractModuleFromCore() {
 
-		$files = glob($path.'*',GLOB_MARK);
+        $path = khofo_base('core.json');
 
-		foreach ($files as $file) {
-			
-			if (is_dir($file)) {
-			
-				Self::deleteDir($file);
-			} else {
-			
-				unlink($file);
-			}
-		}
+        $modules = json_decode(file_get_contents($path), true);
 
-		rmdir($path);
-	}
+        if (isset($modules['modules'][$this->module_name])) {
+
+            unset($modules['modules'][$this->module_name]);
+        }
+
+        file_put_contents($path, json_encode((Object) $modules, JSON_PRETTY_PRINT));
+    }
+
+    public function deleteDir($path) {
+
+        if (!is_dir($path)) {
+
+            throw new InvalidArgumentException("message");
+        }
+
+        $path = str_finish($path, '/');
+
+        $files = glob($path . '*', GLOB_MARK);
+
+        foreach ($files as $file) {
+
+            if (is_dir($file)) {
+
+                Self::deleteDir($file);
+            } else {
+
+                unlink($file);
+            }
+        }
+
+        rmdir($path);
+    }
+
 }
