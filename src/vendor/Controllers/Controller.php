@@ -9,18 +9,26 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests,
+        DispatchesJobs,
+        ValidatesRequests;
 
-    public function simple_validation($data = []){
-    	
-    	$validation = \Validator::make(request()->all(),$data);
+    /**
+     * Simple validation
+     *
+     * @param type $data
+     * @return boolean
+     */
+    public function simple_validation($data = [])
+    {
+        $validation = \Validator::make(request()->all(), $data);
 
-		if ( $validation->fails() ) {
+        if ($validation->fails()) {
 
-			return 	array(
-				'errors' => $validation->errors()->toArray()
-			);
-		}
-		return false;
+            return array(
+                'errors' => $validation->errors()->toArray()
+            );
+        }
+        return false;
     }
 }
