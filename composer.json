@@ -1,5 +1,5 @@
 {
-    "name": "khofaai/laraset",
+    "name": "khofaai/khofo",
     "description": "Module manager",
     "keywords": ["laravel", "laraset", "php", "package", "module manager", "modular system", "laravel preset","vuejs","vue"],
     "license": "MIT",
@@ -13,7 +13,7 @@
         "php": ">=7.0.0",
         "laravel/framework": "5.5.*"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
