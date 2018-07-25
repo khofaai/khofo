@@ -1,0 +1,3 @@
+module.exports = [
+	{src:'core.js',build:'dist/js/core.js',enable:true}
+];

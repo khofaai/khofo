@@ -1,0 +1,33 @@
+import VueRouter from 'vue-router';
+
+import CoreLayout from './modules/Core.vue';
+
+const __ROUTES__ = [];
+
+let modules = require('./core.json').modules;
+
+Object.keys(modules).map((moduleKey) => {
+	let module = modules[moduleKey];
+	
+	try	{
+	
+		let DynamicRoute = require('./modules/'+moduleKey+'/route.js');
+		__ROUTES__.push( DynamicRoute.default );
+	} catch (e) {
+		
+		console.error(moduleKey+'/route.js not found !');
+	}
+});
+
+const Routes = [].concat.apply([],__ROUTES__);
+
+export default new VueRouter({
+	mode:'history',
+	routes:[
+		{
+			path:'/',
+			component:CoreLayout,
+			children:Routes
+		}
+	]
+});"

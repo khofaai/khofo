@@ -7,10 +7,8 @@ const __SESSION__ = {
 		}
 	}
 };
-
 const __EVENT__ = {
 	catch_event(event,callback) {
-
 		if (typeof Object.keys(this.$event._events)[event] === 'undefined') {
 			this.$event.$on(event,function(val){
 				callback(val);
@@ -18,21 +16,17 @@ const __EVENT__ = {
 		}
 	},
 	emit_event(event,params){
-
 		this.$event.$emit(event,params);
 	}
 };
-
 const __REQUEST__ = {
 	__request(_obj) {
-
 		if (typeof _obj.data === 'undefined') {
 			_obj.data = {}
 		}
 		if (typeof _obj.headers === 'undefined') {
 			_obj.headers = {}
 		}
-
 		axios({
 			method 	: _obj.method,
 			url		: _obj.url,
@@ -45,16 +39,16 @@ const __REQUEST__ = {
 		});
 	},
 	ajax_get(url,_obj) {
-		__REQUEST__.ajax_req(url,_obj,"GET");
+		__REQUEST__.ajax_req(url,_obj,\"GET\");
 	},
 	ajax_post(url,_obj) {
-		__REQUEST__.ajax_req(url,_obj,"POST");
+		__REQUEST__.ajax_req(url,_obj,\"POST\");
 	},
 	ajax_put(url,_obj) {
-		__REQUEST__.ajax_req(url,_obj,"PUT");
+		__REQUEST__.ajax_req(url,_obj,\"PUT\");
 	},
 	ajax_delete(url,_obj) {
-		__REQUEST__.ajax_req(url,_obj,"DELETE");
+		__REQUEST__.ajax_req(url,_obj,\"DELETE\");
 	},
 	ajax_req(url,_obj,_method) {
 		_obj.url = url;
@@ -62,8 +56,6 @@ const __REQUEST__ = {
 		__REQUEST__.__request(_obj);
 	}
 }
-
-
 const __METHODS__ = {
 	methods:{
 		redirect(url) {
@@ -72,7 +64,7 @@ const __METHODS__ = {
 	}
 }
 
-const __HElPER_METHODS__ = Object.assign({},__EVENT__,__SESSION__,__REQUEST__);
+const __HElPER_METHODS__ = Object.assign( {}, __EVENT__, __SESSION__, __REQUEST__);
 
 export const Helpers = {
 	methods: __HElPER_METHODS__

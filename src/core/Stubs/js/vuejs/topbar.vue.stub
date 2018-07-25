@@ -1,0 +1,23 @@
+<template>
+	<v-toolbar
+		color="blue darken-3" 
+		dark 
+		app 
+		fixed
+		:clipped-left="\$vuetify.breakpoint.mdAndUp">\n
+		<v-toolbar-title style="width: 300px" class="ml-0 pl-3">\n
+			<v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+			<span class="hidden-sm-and-down"><b>|Artivue</b> Platform</span>\n
+		</v-toolbar-title>\n
+		<v-spacer></v-spacer>\n
+		<v-btn icon> <v-icon>notifications</v-icon> </v-btn>
+		<v-btn icon large> <v-icon>face</v-icon> </v-btn>\n
+	</v-toolbar>
+</template>
+<script>\n
+	export default {\n
+		data: () => ({
+			drawer: null
+		})
+	}
+</script>"

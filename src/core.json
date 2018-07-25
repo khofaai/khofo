@@ -1,6 +1,6 @@
 {
     "version": "0.1.0",
-    "name": "Khofo",
+    "name": "Laraset",
     "modules": {
         "dashboard": {
             "installed": true,

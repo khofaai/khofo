@@ -1,17 +1,23 @@
 {
-    "name": "khofaai/khofo",
-    "description": "module manager",
+    "name": "khofaai/laraset",
+    "description": "Module manager",
+    "keywords": ["laravel", "laraset", "php", "package", "module manager", "modular system", "laravel preset","vuejs","vue"],
     "license": "MIT",
     "authors": [
         {
-            "name": "khofaai",
+            "name": "Anas El Alami",
             "email": "anaselalamikh@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "php": ">=7.0.0",
+        "laravel/framework": "5.5.*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Khofo\\":"src/"
+            "Khofaai\\Laraset\\":"src/"
         },
         "files": [
             "src/helpers/helpers.php"
@@ -20,8 +26,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Khofo\\KhofoServiceProvider",
-                "Khofo\\vendor\\Providers\\RouteServiceProvider"
+                "Khofaai\\Laraset\\LarasetServiceProvider",
+                "Khofaai\\Laraset\\core\\Providers\\RouteServiceProvider"
             ]
         }
     }

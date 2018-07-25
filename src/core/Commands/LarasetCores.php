@@ -1,29 +1,36 @@
 <?php
 
-namespace Khofo\vendor\Commands;
+namespace Khofaai\Laraset\core\Commands;
 
-class KhofoCores extends KhofoCommands
-{
+class LarasetCores extends LarasetCommands {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'Khofo:cores';
-
+    protected $signature = 'laraset:modules';
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'list all cores';
-
+    protected $description = 'list all modules';
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
     /**
      * Execute the console command.
      *
      * @return mixed
      */
-    public function handle() {
+    public function handle()
+    {
         $modules = [];
         foreach (core_modules() as $key => $module) {
             $modules[] = [
@@ -33,6 +40,6 @@ class KhofoCores extends KhofoCommands
             ];
         }
 
-        $this->table(['name', 'installed', 'created date'], $modules);
+        $this->table(['name','installed','created date'],$modules);
     }
 }

@@ -1,0 +1,16 @@
+<?php 
+
+foreach (scandir(dirname(__FILE__).'/modules') as $directory) {
+	// not including this file
+
+	if(basename(__FILE__) != $directory && $directory != '.' && $directory != '..' && strpos($directory,'.') === false){
+
+		// get each file location
+		$path = dirname(__FILE__).'/modules/'.$directory.'/routes.php';
+		// check if this is a file
+		if (is_file($path)) {
+			// including file only once
+			require_once $path;
+		}
+	}
+}

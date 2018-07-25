@@ -1,0 +1,17 @@
+<?php
+
+namespace Khofaai\Laraset\modules\DumpModuleName\Controllers;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class DumpNameController extends Controller
+{
+    //
+    public function __construct() {
+        // #code
+    }
+
+    public function index(Request \$request){
+        // #code
+    }
+};

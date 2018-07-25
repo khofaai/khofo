@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>laraset Platform</title>
+	<meta charset='utf-8' name='csrf-token' content='{{ csrf_token(); }}'>
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>
+</head>
+<body>
+	<main id='app'>
+		<router-view></router-view>
+	</main>
+	<script type='text/javascript' src='{{ laraset_asset("dist/js/core.js"); }}'></script>
+</body>
+</html>"

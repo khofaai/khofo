@@ -1,0 +1,8 @@
+let mix = require('laravel-mix');
+let Core = require('./app/laraset/webpack.mix.js');
+
+Core.map( file => {
+	if (file.enable) {
+		mix.js('app/laraset/'+file.src,'app/laraset/'+file.build);
+	}
+});"

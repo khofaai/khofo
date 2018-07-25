@@ -1,0 +1,34 @@
+require('./bootstrap');
+import router from './routes';
+
+/* Artivue MODULES */
+
+window.Vue = require('vue');
+
+import {Helpers} from './helpers/helpers';
+Vue.mixin(Helpers);
+
+import VueRouter from 'vue-router';
+import Vuetify from 'vuetify';
+
+Vue.use(VueRouter);
+Vue.use(Vuetify);
+
+require ('../../node_modules/vuetify/dist/vuetify.min.css');
+
+Vue.component('Core', require('./modules/Core.vue'));
+
+const eventBus = new Vue();
+
+Object.defineProperties(Vue.prototype, {
+  	$event: {
+	    get: function () {
+	      	return eventBus
+	    }
+  	}
+});
+
+const app = new Vue({
+	el: '#app',
+	router
+});;

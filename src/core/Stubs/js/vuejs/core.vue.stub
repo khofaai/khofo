@@ -1,0 +1,48 @@
+<template>
+	<v-app id="inspire">
+		<v-navigation-drawer 
+			app 
+			fixed 
+			:clipped="$vuetify.breakpoint.mdAndUp" 
+			v-model="drawer">
+			<Menu @open="open_dialog" @pageLoading="page_loading"></Menu>
+		</v-navigation-drawer>
+		<Topbar></Topbar>
+		<v-content>
+			<v-container style="margin-top:20%" v-if="pageLoading" fluid>
+                <v-layout justify-center align-center>
+					<v-progress-circular 
+						:size="70" 
+						:rotate="0" 
+						indeterminate 
+						color="primary">
+					</v-progress-circular>
+                </v-layout>
+            </v-container>
+			<router-view v-else></router-view>
+		</v-content>
+	</v-app>
+</template>
+<script>
+	import Menu from './menu'; 
+	import Topbar from './topbar'; 
+	export default {
+		components:{
+			Menu,
+			Topbar
+		},
+		data: () => ({
+			pageLoading: false,
+			drawer: null,
+			open_dialog:false
+		}),
+		methods:{
+			page_loading(loading) {
+				this.pageLoading = loading;
+			}
+		}
+	}
+</script>
+<style type="text/css">
+	.progress-linear{margin:0;}
+</style>

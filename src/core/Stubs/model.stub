@@ -1,0 +1,9 @@
+<?php
+
+namespace Khofaai\Laraset\modules\DumpModuleName\Database\Models;
+use Illuminate\Database\Eloquent\Model;
+
+class DumpModelName extends Model
+{
+	//
+};
