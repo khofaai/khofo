@@ -3,7 +3,7 @@
 namespace Khofaai\Laraset\core\Commands;
 
 use Laraset;
-use Filesystem;
+use File;
 
 class LarasetDelete extends LarasetCommands
 {
@@ -28,15 +28,6 @@ class LarasetDelete extends LarasetCommands
 	protected $path;
 
 	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct() 
-	{	
-		parent::__construct();
-	}
-	/**
 	 * init module name
 	 * 
 	 * @return Boolean
@@ -45,33 +36,26 @@ class LarasetDelete extends LarasetCommands
 	{
 		$modules = $this->modulesName();
 		if ($modules) {
-
-			$this->moduleName = $this->choice('For Which Module ?',$this->modulesName());
+			$this->moduleName = $this->choice('For Which Module ?', $modules);
 			return true;
-		} else {
-			$this->error('no module is created yet !');
-			return false;
 		}
+		$this->error('no module is created yet !');
+		return false;
 	}
 
 	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
+	 * @inheritdoc
 	 */
 	public function handle() 
 	{	
 		if( $this->_construct() ) {
-
 			if (!$this->pathExist()) {
-
 				if ($this->confirm($this->moduleName)) {
 					$this->extractModule();
 					$this->comment('<options=bold;fg=yellow>['.$this->moduleName.'] package deleted successfully');
 					$this->deleteDir($this->path);
 				}
 			} else {
-				
 				$this->error("[".$this->moduleName."] module does't exist");
 			}
 		}
@@ -112,7 +96,7 @@ class LarasetDelete extends LarasetCommands
 				unset($js[$key]);
 			}
 		}
-		Filesystem::put($path, $js);
+		File::put($path, $js);
 	}
 	/**
 	 * remove Spaces from a given string
@@ -132,13 +116,13 @@ class LarasetDelete extends LarasetCommands
 	protected function extractModuleFromCore() 
 	{	
 		$path = Laraset::base('core.json');
-		$modules = json_decode(Filesystem::read($path),true);
+		$modules = json_decode(File::get($path),true);
 
 		if (isset($modules['modules'][$this->moduleName])) {
 			unset($modules['modules'][$this->moduleName]);
 		}
 
-		Filesystem::put($path, json_encode((Object)$modules));
+		File::put($path, json_encode((Object)$modules));
 	}
 	/**
 	 * delete Current Module Directory
@@ -154,15 +138,15 @@ class LarasetDelete extends LarasetCommands
 		}
 		
 		$path = str_finish($path,'/');
-		$files = Filesystem::glob($path.'*',GLOB_MARK);
+		$files = File::glob($path.'*',GLOB_MARK);
 
 		foreach ($files as $file) {
 			if (is_dir($file)) {
 				Self::deleteDir($file);
 			} else {
-				Filesystem::delete($file);
+				File::delete($file);
 			}
 		}
-		Filesystem::deleteDir($path);
+		File::deleteDirectory($path);
 	}
 }

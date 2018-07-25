@@ -7,14 +7,44 @@ use Illuminate\Console\Command;
 use Laraset;
 use File;
 
-class LarasetCommands extends Command
+abstract class LarasetCommands extends Command
 {
+	/**
+	 * This Core name
+	 * 
+	 * @var string
+	 */
 	protected $coreNamespace = "laraset";
+	/**
+	 * project base path 
+	 * 
+	 * @var String
+	 */
 	protected $basePath;
+	/**
+	 * [$modulePath description]
+	 * @var Strnig
+	 */
 	protected $modulePath;
-	protected $commandOptions;
+	/**
+	 * contain all command options
+	 * @var array
+	 */
+	protected $commandOptions = [];
+	/**
+	 * Module name
+	 * @var String
+	 */
 	protected $moduleName;
+	/**
+	 * Module name with first Letter uppercase
+	 * @var String
+	 */
 	protected $moduleNameUpper;
+	/**
+	 * modules folder base path
+	 * @var String
+	 */
 	protected $baseSrc;
 
 	public function __construct() 
@@ -22,32 +52,55 @@ class LarasetCommands extends Command
 		$this->basePath = app_path($this->coreNamespace).'/';
 		parent::__construct();
 	}
+	/**
+	 * Execute the console command.
+	 */
+	abstract function handle();
 
-	protected function super_construct() 
+	/**
+	 * Init module name in case is allowed
+	 * 
+	 * @return Boolean
+	 */
+	protected function init() 
 	{	
         $this->initName();
-
-        if ( in_array( strtolower($this->moduleName), $this->notAllowedNames() ) ) {
-            
+        if (in_array(strtolower($this->moduleName), $this->notAllowedNames())) {
             $this->info('<options=bold;fg=yellow>['.strtolower($this->moduleName).']<bg=black;fg=yellow> name is reserved ! please choose another one');
             return false;
         }
-
         return true;
 	}
 
+	/**
+	 * Create File
+	 * 
+	 * @param  String $path
+	 * @param  String $content
+	 * @return void
+	 */
 	protected function makeFile($path,$content) 
 	{
 		File::put($path,$content);
 	}
 
-	protected function notAllowedNames() 
+	/**
+	 * return not allowed names
+	 * 
+	 * @return Array
+	 */
+	protected function notAllowedNames()
 	{
 		return [
 			'admin'
 		];
 	}
 
+	/**
+	 * Initial module name
+	 * 
+	 * @return void
+	 */
 	protected function initName() 
 	{
 		$this->moduleName = $this->formatName($this->argument('name'));
@@ -57,17 +110,34 @@ class LarasetCommands extends Command
 		$this->modulePath = $this->baseSrc.$this->moduleName;
 	}
 
+	/**
+	 * set option name to $commandOptions
+	 * 
+	 * @param String $option
+	 * @return void
+	 */
 	protected function setOption($option) 
 	{
-		$option_val = $this->option($option);
-		$this->commandOptions[$option] = $option_val == 'default' ? false : (is_null($option_val) ? true : $option_val);
+		$optionValue = $this->option($option);
+		$this->commandOptions[$option] = ($optionValue == 'default' ? false : (is_null($optionValue) ? true : $optionValue));
 	}
 
+	/**
+	 * get option value
+	 * 
+	 * @param  String $option option name
+	 * @return Boolean/String ( String in case the option has value )
+	 */
 	protected function getOption($option)
 	{
 		return $this->commandOptions[$option];
 	}
 
+	/**
+	 * Set all command options to $commandOptions
+	 * 
+	 * @param Array/String $option ( Array in case multiple options )
+	 */
 	protected function setCommandOption($option) 
 	{
 		if (is_array($option)) {
@@ -79,38 +149,80 @@ class LarasetCommands extends Command
 		}
 	}
 
+	/**
+	 * Remplace - with _
+	 * 
+	 * @param  String $name
+	 * @return String
+	 */
 	protected function formatName($name) 
 	{
 		return str_replace('-', '_', $name); 
 	}
 
-	protected function makeDirectory($directory = '') 
+	/**
+	 * Create Directory
+	 * 
+	 * @param  String $path
+	 * @return void
+	 */
+	protected function makeDir($path) 
 	{
-		File::makeDirectory(
-			$this->modulePath.($directory == '' ? '' : '/'.$directory),
-			0777,
-			true,
-			true
-		);
+		File::makeDirectory( $path, 0777, true, true );
 	}
 
+	/**
+	 * Create directories
+	 *
+	 * @param  array $directories
+	 * @return void
+	 */
+	protected function makeDirectories($directories) 
+	{
+		$this->makeDir($this->modulePath);
+		foreach ($directories as $directory) {
+			$this->makeDir($this->modulePath . '/' . $directory);
+		}
+	}
+
+	/**
+	 * get Laraset Modules name
+	 * 
+	 * @return qrray
+	 */
 	protected function modulesName() 
 	{
 		return array_keys(Laraset::modules());
 	}
 
+	/**
+	 * get Instance Signature
+	 * 
+	 * @return string
+	 */
 	public function getSignature() 
 	{
 		return $this->signature;
 	}
 
+	/**
+	 * Get instance description
+	 *
+	 * @return string
+	 */
 	public function getDescription() 
 	{
 		return $this->description;
 	}
 
+	/**
+	 * Get given stub file name
+	 *
+	 * @param  string $name
+	 * @return string
+	 */
 	protected function getStubFileContent($name) 
 	{
-		return File::read(Laraset::getStub($name));
+		return File::get(Laraset::getStub($name));
 	}
 }

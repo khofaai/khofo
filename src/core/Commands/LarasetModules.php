@@ -2,7 +2,9 @@
 
 namespace Khofaai\Laraset\core\Commands;
 
-class LarasetCores extends LarasetCommands {
+use Laraset;
+
+class LarasetModules extends LarasetCommands {
     /**
      * The name and signature of the console command.
      *
@@ -15,24 +17,15 @@ class LarasetCores extends LarasetCommands {
      * @var string
      */
     protected $description = 'list all modules';
+    
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function handle()
     {
         $modules = [];
-        foreach (core_modules() as $key => $module) {
+
+        foreach (Laraset::modules() as $key => $module) {
             $modules[] = [
                 "name" => $key,
                 "installed" => $module['installed'] ? 'yes' : 'no',

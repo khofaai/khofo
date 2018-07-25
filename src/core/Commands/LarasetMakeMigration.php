@@ -20,49 +20,48 @@ class LarasetMakeMigration extends LarasetCommands
 	 * @var string
 	 */
 	protected $description = 'make migration for specified module';
-
 	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
+	 * selected module name
+	 * 
+	 * @var String
 	 */
-	protected $module_name;
+	protected $selectedModule;
+	/**
+	 * Class name
+	 * 
+	 * @var String
+	 */
 	protected $className;
 
-	public function __construct() 
-	{
-		parent::__construct();
-	}
-
-    protected function self_construct() 
+	/**
+	 * init $className & $selectedModule values
+	 * 
+	 * @return [type] [description]
+	 */
+    protected function _construct() 
     {
-        $this->module_name = $this->choice('For Which Module ?',$this->modulesName());
+        $this->selectedModule = $this->choice('For Which Module ?',$this->modulesName());
 		$this->className = 'Create'.ucfirst($this->moduleName).'Table';
     }
 
 	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
+	 * @inheritdoc
 	 */
 	public function handle() 
 	{	
-		if (!$this->super_construct()) {
+		if (!$this->init()) {
             return false;
         }
-		
-		$this->self_construct();
-		
-		$module_path = Laraset::modulePath($this->module_name);
-		if (!class_exists_in_directory($module_path.'/Database/Migrations/',$this->className)) {
-			
+		$this->_construct();
+		$modulePath = Laraset::modulePath($this->selectedModule);
+		if (!class_exists_in_directory($modulePath.'/Database/Migrations/',$this->className)) {
 			$migration_class = date('Y_m_d_his').'_create_'.$this->moduleName.'_table.php';
 			$content = 	str_replace(
 							['DumpMigrationName','DumpTableName','DumpTableName'], 
 							[$this->className,$this->moduleName,$this->moduleName], 
 							$this->getStubFileContent('migration')
 						);
-			$this->makeFile($module_path.'/Database/Migrations/'.$migration_class,$content);
+			$this->makeFile($modulePath.'/Database/Migrations/'.$migration_class,$content);
 			$this->info('<options=bold;fg=green>['.$this->className.']<bg=black;fg=green>  migration created successfully !');
 		} else {
 			

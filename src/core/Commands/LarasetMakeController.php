@@ -2,6 +2,8 @@
 
 namespace Khofaai\Laraset\core\Commands;
 
+use File;
+
 class LarasetMakeController extends LarasetCommands {
     /**
      * The name and signature of the console command.
@@ -17,67 +19,57 @@ class LarasetMakeController extends LarasetCommands {
      */
     protected $description = 'create new Controller for you Laraset module';
     /**
-     * Create a new command instance.
-     *
-     * @return void
+     * selected module name
+     * 
+     * @var String
      */
-
-    protected $module_name;
-
-    public function __construct()
+    protected $selectedModule;
+    
+    /**
+     * set selected module name
+     * 
+     * @return String
+     */
+    private function initSelectedModuleName() 
     {
-        parent::__construct();
-    }
-
-    private function self_construct() 
-    {
-        $this->module_name = $this->choice('For Which Module ?',$this->modulesName());
+        $this->selectedModule = $this->choice('For Which Module ?',$this->modulesName());
     }
 
     /**
-     * Execute the console command.
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function handle() 
     {    
         try {
-
-            if ( !$this->super_construct() ) {
+            if (!$this->init()) {
                 return false;
             }
-            $this->self_construct();
-            
-            if ( file_exists($this->modulePath) ) {
-                
+            $this->initSelectedModuleName();
+            if (file_exists($this->modulePath)) {
                 $this->comment("[".$this->moduleName.'] controller already exist !');
                 return false;
             }
-
-            if( $this->createFile() ) {
-
+            if ($this->createFile()) {
                 $this->info('<options=bold;fg=cyan>['.$this->moduleName.']<bg=black;fg=cyan> controller created successfully');
             }
         } catch (Exception $e) {
-
-            $this->error('somthing went wrong !');
+            $this->error('something went wrong !');
         }
     }
-
-    private function createFile() {
-
-        $path = $this->_src.$this->module_name.'/Controllers/'.ucfirst($this->moduleName).'.php';
-
-        if (file_exists($path)) {
-
+    /**
+     * Create Controller File
+     * 
+     * @return Boolean
+     */
+    private function createFile() 
+    {
+        $path = $this->baseSrc.$this->selectedModule.'/Controllers/'.ucfirst($this->moduleName).'.php';
+        if (File::exists($path)) {
             $this->comment("[ ".$this->moduleName.' ] controller already exist !');
             return false;
         }
-
-        $content = file_get_contents(laraset_get_stub('controller'));
-        $content = str_replace(['DumpModuleName','DumpName'], [$this->module_name,$this->moduleName], $content);
+        $content = str_replace(['DumpModuleName','DumpName'], [$this->selectedModule,$this->moduleName], $this->getStubFileContent('controller'));
         $this->makeFile($path,$content);
-
         return true;
     }
 }

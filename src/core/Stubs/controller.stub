@@ -11,7 +11,7 @@ class DumpNameController extends Controller
         // #code
     }
 
-    public function index(Request \$request){
+    public function index(Request $request){
         // #code
     }
 };

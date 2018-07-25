@@ -3,7 +3,8 @@
 namespace Khofaai\Laraset\core\Commands;
 
 use Khofaai\Laraset\core\Commands\LarasetCommands;
-use Filesystem,Laraset;
+use Illuminate\Filesystem\Filesystem;
+use File,Laraset;
 
 class LarasetInstall extends LarasetCommands
 {
@@ -14,12 +15,9 @@ class LarasetInstall extends LarasetCommands
     	'success' => '<options=bold;fg=cyan>[Laraset]<bg=black;fg=cyan> installed successfully',
     	'warning' => '<options=bold,reverse>~Laraset~<fg=yellow> already installed.'
     ];
-
-	public function __construct() 
-	{
-		parent::__construct();
-	}
-
+    /**
+	 * @inheritdoc
+	 */
 	public function handle() 
 	{
 		$this->updateInstallStatus();
@@ -31,9 +29,9 @@ class LarasetInstall extends LarasetCommands
 	{
 		$path = Laraset::path('core.json');
 
-		if (Filesystem::exists($path)) {
-			
-			$modules = json_decode(Filesystem::read($path),true);
+		if (File::exists($path)) {
+
+			$modules = json_decode(File::get($path),true);
 
 			if (!$modules['installed']["status"] || !isset($modules['installed']["status"])) {
 
@@ -43,7 +41,7 @@ class LarasetInstall extends LarasetCommands
 
 				$modules['installed']["status"] = true;
 				$modules['installed']["installed_at"] = date('Y-m-d H:i:s');
-				Filesystem::put($path, json_encode((Object)$modules);
+				File::put($path, json_encode((Object)$modules));
 
 				$this->info($this->messages['success']);
 			} else {
@@ -91,7 +89,7 @@ class LarasetInstall extends LarasetCommands
 	protected function createFolder($path) 
 	{	
 		if (!is_dir($path)) {
-			Filesystem::createDir($path);
+			File::makeDirectory($path);
 		}
 	}
 
@@ -104,7 +102,7 @@ class LarasetInstall extends LarasetCommands
 				'core.json' => 'js/core.json',
 				'routes.js' => 'js/route.js',
 				'routes.php' => 'route.php',
-				'webpack.mix.js' => 'js/webpack.min.js'
+				'webpack.mix.js' => 'js/webpack.mix.js'
 			],
 			'helpers' => [
 				'helpers.js' => 'js/helpers.js',
@@ -125,7 +123,7 @@ class LarasetInstall extends LarasetCommands
 		}
 		
 		$laraset_path = resource_path('views/laraset.blade.php');
-		if (!Filesystem::exists($laraset_path)) {
+		if (!File::exists($laraset_path)) {
 			$this->makeFile($laraset_path,$this->getStubFileContent('template.blade'));
 		}
 
@@ -136,12 +134,12 @@ class LarasetInstall extends LarasetCommands
 		
 		$path = base_path('webpack.mix.js');
 
-		if (Filesystem::exists($path)) {
-			$content = Filesystem::read($path);
+		if (File::exists($path)) {
+			$content = File::get($path);
 			$this->makeFile(base_path('webpack-old.mix.js'),$content);
-			Filesystem::delete($path);
+			File::delete($path);
 		}
 
-		$this->makeFile($path,$this->getStubFileContent('js/webpack.base.min.js'));
+		$this->makeFile($path,$this->getStubFileContent('js/webpack.base.mix.js'));
 	}
 }

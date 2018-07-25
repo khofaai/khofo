@@ -15,27 +15,27 @@ class Laraset extends Facade
 		return $el != '' && strpos($el,$str) !== false;
 	}
 
-	public static path($path = '')
+	public static function path($path = '')
 	{
-		return laraset_path($path = '');
+		return laraset_path($path);
 	}
 
-	public static modules()
+	public static function modules()
 	{
 		return laraset_modules();
 	}
 
-	public static base($path = '')
+	public static function base($path = '')
 	{
-		return laraset_base($path = '');
+		return laraset_base($path);
 	}
 
-	public static asset($path = '')
+	public static function asset($path = '')
 	{
-		return laraset_asset($path = '');
+		return laraset_asset($path);
 	}
 
-	public static getStub($name)
+	public static function getStub($name)
 	{
 		return laraset_get_stub($name);
 	}
@@ -52,7 +52,7 @@ class Laraset extends Facade
 
 	public function dirStructure($path = null,$subdir = '',$subpath = '')
 	{
-		return dir_structure($path = null,$subdir = '',$subpath = '');
+		return dir_structure($path = null,$subdir,$subpath);
 	}
 
 	public function getFilePhpClasses($filepath)

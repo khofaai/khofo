@@ -2,7 +2,7 @@
 
 namespace Khofaai\Laraset\core\Commands;
 
-use Filesystem;
+use File;
 
 class LarasetMakeModel extends LarasetCommands {
     /**
@@ -18,36 +18,25 @@ class LarasetMakeModel extends LarasetCommands {
      * @var string
      */
     protected $description = 'Command description';
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     public function _construct() 
     {
         $this->moduleName = $this->choice('For Which Module ?',$this->modulesName());
     }
+    
     /**
-     * Execute the console command.
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function handle()
     {
         try {
 
-            if (!$this->super_construct()) {
+            if (!$this->init()) {
                 return false;
             }
             $this->_construct();
             
-            if (Filesystem::exists($this->modulePath)) {
+            if (File::exists($this->modulePath)) {
                 
                 $this->comment("[".$this->moduleName.'] model already exist !');
                 return false;
@@ -66,7 +55,7 @@ class LarasetMakeModel extends LarasetCommands {
 
         $path = $this->_src.$this->moduleName.'/Database/Models/'.$this->moduleNameUpper.'.php';
         
-        if (Filesystem::exists($path)) {
+        if (File::exists($path)) {
             $this->comment("[ ".$this->moduleNameUpper.' ] controller already exist !');
             return false;
         }
