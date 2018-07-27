@@ -1,11 +1,6 @@
 # Laraset #
-<p align="center">
-	<h1>Laraset</h1>
-  	<a href="https://packagist.org/packages/khofaai/laraset"><img src="https://img.shields.io/badge/laraset-dev(beta)-orange.svg" alt="Build Status"></a>
-  	<a href="https://packagist.org/packages/khofaai/laraset"><img src="https://img.shields.io/badge/composer-v0.1.3-orange.svg" alt="Coverage Status"></a>
-  	<a href="https://packagist.org/packages/khofaai/laraset"><img src="https://img.shields.io/badge/licence-mit-green.svg" alt="Coverage Status"></a>
-  	<br>
-</p>
+[![Github All Releases](https://img.shields.io/github/downloads/khofaai/khofo/total.svg)](https://github.com/khofaai/khofo) [![Github Pre-Releases](https://img.shields.io/github/downloads-pre/khofaai/khofo/latest/total.svg)](https://github.com/khofaai/khofo) ![GitHub](https://img.shields.io/github/license/khofaai/khofo.svg) [![GitHub package version](https://img.shields.io/khofaai/khofo/v/badges/shields.svg)](https://github.com/khofaai/khofo)
+
 this package is for [Laravel framework](https://laravel.com)
 
 you can install by using :
@@ -22,19 +17,6 @@ you can install by using :
 
 * no configuration needed
 * need vuejs installed
-* no database configuration
-* no test sets
-* add to config/app.php :
-
-        Khofaai\Laraset\KhofoServiceProvider::class,
-        Khofaai\Laraset\core\Providers\RouteServiceProvider::class,
-        ...
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
 
 ### Who do I talk to? ###
 

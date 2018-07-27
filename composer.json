@@ -1,5 +1,6 @@
 {
     "name": "khofaai/laraset",
+    "version": "0.2.0",
     "description": "Module manager",
     "keywords": ["laravel", "laraset", "php", "package", "module manager", "modular system", "laravel preset","vuejs","vue"],
     "license": "MIT",

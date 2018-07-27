@@ -23,8 +23,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-
         parent::boot();
     }
 
@@ -35,9 +33,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {   
-
         $this->coreRoutes();
-        //
     }
 
     /**
@@ -50,7 +46,6 @@ class RouteServiceProvider extends ServiceProvider
     protected function coreRoutes()
     {
         if (file_exists(laraset_base('routes.php'))) {
-
             Route::middleware('web')->group(laraset_base('routes.php'));
         }
     }
